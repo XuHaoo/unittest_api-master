@@ -35,9 +35,10 @@ class MeetingCase(unittest.TestCase):
         result = result.json()
         print(result)
         ss = result['Data']
+        globals()["Data"]=ss
         print("新增会议ID", ss)
         # return ss
-
+    def  test_002ConferenceInfo(self):
         """查询新增会议信息"""
         url = host + '/api/v1/Conference/ConferenceInfo'
         headers = {
@@ -51,7 +52,7 @@ class MeetingCase(unittest.TestCase):
                           'Chrome/92.0.4515.107 Safari/537.36'
         }
 
-        paylad = {'id':ss}
+        paylad = {'id':globals()["Data"]}
         result = requests.post(url, headers=headers, json=paylad)
         result = result.json()
         print('查询新增会议信息', result)
@@ -62,7 +63,7 @@ class MeetingCase(unittest.TestCase):
     # 注册成功，返回结果中message==成功
     # self.assertEqual(act, exp)
 
-    def test_002ConferenceInfo(self):
+    def test_003ConferenceInfo(self):
         """修改会议信息"""
         url = host + '/api/v1/Conference/UpdateConferenceInfo'
         headers = {
@@ -96,6 +97,29 @@ class MeetingCase(unittest.TestCase):
         result = result.json()
         print('修改会议后的参数', result)
         return result
+
+
+    def test_004ConferenceInfo(self):
+        """获取参会人员列表"""
+        url = host+'/api/v1/Conference/ParticipantsList'
+        headers = {
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Token': Smzd.token,
+            'ClientType': '1',
+            'Accept': 'application/json, text/plain, */*',
+            'Connection': 'keep-alive',
+            'ClientId': 'fe522376-313c-40c7-8f17-886a1bf33c62',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/92.0.4515.107 Safari/537.36'
+                  }
+        payload = {
+              "currentPage": 1,
+              "pageSize": 10,
+              "conferenceID": globals()["Data"]
+                  }
+        result = requests.post(url,headers=headers,json=payload)
+        result = result.json()
+        print('获取参会人员信息',result)
 
 
 if __name__ == '__main__':
